@@ -1,0 +1,37 @@
+
+<DECLARAÇÃO> => <TIPO> <IDENTIFICADOR> <DEC2>
+
+<DEC2> => , <IDENTIFICADOR> <DEC2>
+<DEC2> => ;
+
+
+<ATRIBUIÇÃO> => <IDENTIFICADOR> = <EXPRESSÃO>
+
+
+<EXPRESSÃO> => <IDENTIFICADOR|NUMERO> <EXP2>
+
+<EXP2> =>  <OPERADOR> <IDENTIFICADOR|NUMERO> <EXP2>
+<EXP2> => ;
+
+
+<LOOP> => while ( <COMPARAÇÃO> )  { <CODIGO> }
+<LOOP> => for ( <DECLARAÇÃO|ATRIBUIÇÃO> ; <COMPARAÇÃO> ; <ATRIBUIÇÃO> ) { <CODIGO> }
+
+
+
+<CODIGO> => <STATEMENT> <CODIGO>
+<CODIGO => EPSLON
+
+###################
+terminar de implementar
+
+<CONDIÇÃO if> => if ( <EXPRESSAO|ATRIBUIÇÃO>* ) { <CODIGO> }
+<CONDIÇÃO else> => else { <CODIGO> }
+<CONDIÇÃO else if> => else <CONDIÇÃO if>
+
+####################
+
+<STATEMENT> => <DECLARAÇÃO>
+<STATEMENT> => <ATRIBUIÇÃO>
+<STATEMENT> => <LOOP>
+<STATEMENT> => <CONDIÇÃO>
