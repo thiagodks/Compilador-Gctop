@@ -1,5 +1,34 @@
 #include "../lib/gctop.h"
 
+void printErrorLine(char *errorLine, int column, int sizeErro){
+
+	int chp = TRUE;
+
+	for(int i = 0; i < strlen(errorLine); i++){
+		if(i < column-1) printf("%c", errorLine[i]);
+		else if(i < (column + sizeErro)-1) printf(FORERED BOLD_ON"%c"FORENORMAL_COLOR BOLD_OFF,errorLine[i]);
+		else printf("%c",errorLine[i]);
+	}
+	
+	printf("\n");
+	
+	for(int i = 0; i < strlen(errorLine); i++){
+		if(i < column-1){
+			if(errorLine[i] == '\t') printf("\t");
+			else printf(" ");
+		} 
+		else if(i < (column + sizeErro)-1){
+			if (chp){
+				chp = FALSE;
+		 		printf(FORERED BOLD_ON"^"FORENORMAL_COLOR BOLD_OFF);
+			}
+	 		printf(FORERED BOLD_ON"~"FORENORMAL_COLOR BOLD_OFF);
+		}
+		else continue;
+	}
+	printf("\n");
+}
+
 void printError(char *fileName, int line, int column, char *name, char *errorLine, int type){
 
 	if(printERROL == line && printERROC == column) return;
@@ -11,36 +40,36 @@ void printError(char *fileName, int line, int column, char *name, char *errorLin
 
 		case INVALID_CH:
 			printf(BOLD_ON"%s:%d:%d: "FORERED"error"FORENORMAL_COLOR BOLD_OFF": Invalid character: '%s'\n", fileName, line, column, name);
-			printf("%s\n\n", errorLine);
+			printErrorLine(errorLine, column, strlen(name));
 			break;
 
 		case INVALID_SUFFIX:
 			printf(BOLD_ON"%s:%d:%d: "FORERED"error"FORENORMAL_COLOR BOLD_OFF": Invalid suffix in: '%s'\n", fileName, line, column, name);
-			printf("%s\n\n", errorLine);
+			printErrorLine(errorLine, column, strlen(name));
 			break;
 	
 		case INVALID_DEC:
 			printf(BOLD_ON"%s:%d:%d: "FORERED"error"FORENORMAL_COLOR BOLD_OFF": Error in declaration: '%s'\n", fileName, line, column, name);
-			printf("%s\n\n", errorLine);
+			printErrorLine(errorLine, column, strlen(name));
 			break;
 
 		case INVALID_ATR:
 			printf(BOLD_ON"%s:%d:%d: "FORERED"error"FORENORMAL_COLOR BOLD_OFF": Error in attribution: '%s'\n", fileName, line, column, name);
-			printf("%s\n\n", errorLine);
+			printErrorLine(errorLine, column, strlen(name));
 			break;
 
 		case INVALID_EXP:
 			printf(BOLD_ON"%s:%d:%d: "FORERED"error"FORENORMAL_COLOR BOLD_OFF": Error in expression '%s'\n", fileName, line, column, name);
-			printf("%s\n\n", errorLine);
+			printErrorLine(errorLine, column, strlen(name));
 			break;
 
 		case INVALID_ERRO:
 			printf(BOLD_ON"%s:%d:%d: "FORERED"error"FORENORMAL_COLOR BOLD_OFF": Error in '%s'\n", fileName, line, column, name);
-			printf("%s\n\n", errorLine);
+			printErrorLine(errorLine, column, strlen(name));
 			break;
 		case INVALID_DIR:
 			printf(BOLD_ON"%s:%d:%d: "FORERED"error"FORENORMAL_COLOR BOLD_OFF": Error in directive '%s'\n", fileName, line, column, name);
-			printf("%s\n\n", errorLine);
+			printErrorLine(errorLine, column, strlen(name));
 			break;
 	}
 	free(errorLine);
@@ -86,8 +115,10 @@ int sizeArchive(char *codeName){
 
 char *readCode(char *codeName, int size){
 
-	char *code = (char*) malloc((size+10)*sizeof(char));
-
+	char *code = NULL;
+	code = (char*) malloc((size+10)*sizeof(char));
+	for(int i = 0; i < size+10; i++) code[i] = '\0';
+		
 	FILE *arqCode = fopen(codeName, "r");
 	if(arqCode == NULL) return FALSE;
 

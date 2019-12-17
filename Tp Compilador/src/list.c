@@ -73,6 +73,15 @@ int insertToken(TkList *tkl, Token tk){
 	return TRUE;
 }
 
+void printTableVars(TableVars tableVars[]){
+
+	printf("LEN: %d\n", tableVars[0].len);
+	for(int i = 0; i < tableVars[0].len; i++){
+		printf("\n\nName: %s\nType: %s\nValue: %s\nLine: %d\nColumn: %d\nInit: %d", tableVars[i].var.name, tableVars[i].var.type, tableVars[i].var.value, tableVars[i].var.line, tableVars[i].var.column, tableVars[i].var.init);
+	}
+
+}
+
 int printListTK(TkList* tkl){
 
 	if(tkl == NULL) return FALSE;

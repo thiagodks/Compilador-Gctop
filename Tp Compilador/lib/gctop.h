@@ -28,7 +28,6 @@
 #define INVALID_ERRO 112
 #define INVALID_DIR 113
 
-
 struct token{
 	char type[256];
 	char value[256];
@@ -41,15 +40,32 @@ struct reservedWord{
 	int id;
 };
 
+struct variable{
+	char name[256];
+	char type[256];
+	char value[256];
+	int line, column;
+	int init;
+	int used;
+};
+
+typedef struct variable Variable;
 typedef struct token Token;
 typedef struct element *TkList;
 typedef struct reservedWord ReservedWords;
+
+struct tableVariables{
+	Variable var;
+	int len;
+};
+
+typedef struct tableVariables TableVars;
 
 /* ================ GCTOP ================ */ 
 
 int lexicalAnalyzer(char *fileName, char *code, int size, ReservedWords *rW, TkList *tkl);
 
-int syntacticAnalyzer(TkList *tkl, char *code, char *fileName, int size);
+int syntacticAnalyzer(TkList *tkl, TableVars tables[], char *code, char *fileName, int size);
 
 void clear(char word[256]);
 
@@ -98,10 +114,14 @@ void printRW(ReservedWords *rW);
 
 int printListTK(TkList* tkl);
 
+void printTableVars();
+
 void printError(char *fileName, int line, int column, char *name, char *errorLine, int type);
 
 int sizeArchive(char *codeName);
 
 char *readCode(char *codeName, int size);
+
 int printERROL;
 int printERROC;
+int numVar;

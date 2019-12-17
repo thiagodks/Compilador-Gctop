@@ -4,6 +4,7 @@ int main(int argc, char **argv){
 
 	printERROL = -1;
 	printERROC = -1;
+	numVar = 0;
 	int DEBUG = FALSE;
 	// system("clear");
 
@@ -23,13 +24,20 @@ int main(int argc, char **argv){
 	
 	//executa a verificação sobre o código, criando uma lista de tokens
 	lexicalAnalyzer(argv[1], code, size, rW, tkl);
+	// printf("Número de variaveis: %d\n", numVar);
+
+	TableVars tableVars[numVar];
+	tableVars[0].len = 0;
 
 	if(DEBUG) printListTK(tkl);
 
-	syntacticAnalyzer(tkl, code, argv[1], size);
+	syntacticAnalyzer(tkl, tableVars, code, argv[1], size);
+	printTableVars(tableVars);
+	// printf("\n");
 	
 	freeList(tkl);
 	free(rW); free(code);
+
 
 	return 0;
 }

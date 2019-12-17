@@ -29,9 +29,9 @@ int isSeparator(char ch, char separatorsFull[SP][2], int size){
 //verifica se é uma palavra reservada
 int isReservedWord(char word[256], ReservedWords *rW){
 
-
 	for(int i = 0; i < RW; i++){
 		if(strcmp(word, rW[i].name) == 0){
+			if((strcmp(word, "int") == 0) || (strcmp(word, "float") == 0) || (strcmp(word, "char") == 0) || (strcmp(word, "long") == 0) || (strcmp(word, "void") == 0)) numVar += 1;
 			return TRUE;
 		}
 	}
@@ -114,11 +114,12 @@ int isOperator_L(char ch, int i, char *code){
 	return FALSE;
 }
 
-int isComment(char ch, int *i, char *code){
+int isComment(char ch, int *i, char *code, int sizeCode){
 
 	char word[256];
 	int j;
 
+	if(*i+1 == sizeCode) return FALSE;
 	word[0] = ch; word[1] = code[(*i)+1]; word[2] = '\0';
 
 	if(strcmp(word, "//") == 0){
@@ -127,11 +128,15 @@ int isComment(char ch, int *i, char *code){
 		return TRUE;
 	}
 	else if(strcmp(word, "/*") == 0){
-		for(j = (*i); code[j] != '*' || code[j+1] != '/'; j++);
-		(*i) = j+1;
+		for(j = (*i); (j+1 < sizeCode) && (code[j] != '*' || code[j+1] != '/'); j++){
+
+			if(j <= sizeCode-1){
+				(*i) = j+1;
+				return TRUE;
+			} 
+		}
 		return TRUE;
 	}
-
 	return FALSE;
 }
 
@@ -220,11 +225,14 @@ int lexicalAnalyzer(char *fileName, char *code, int size, ReservedWords *rW, TkL
 	char ch;
 	char word[256] = "\0";
 	int index = 0, line = 1, column = 1, pivo = 0, error = 0, comment = 0;
-
+	int sizeCode = 29;
+	// sizeCode = strlen(code);
+	printf("sizeCode: %lu\n", strlen(code));
+	getchar();
 	//token para ir inserindo na lista de tokens
 	Token newTK;
 
-	for(int i = 0; code[i] != EOF; i++){
+	for(int i = 1; code[i] != EOF; i++){
 
 		//lendo caractere por caractere
 		ch = code[i];
@@ -260,7 +268,7 @@ int lexicalAnalyzer(char *fileName, char *code, int size, ReservedWords *rW, TkL
 			
 			}
 			
-			comment = isComment(ch, &i, code);
+			comment = isComment(ch, &i, code, sizeCode);
 
 			if(!comment){
 
@@ -274,6 +282,9 @@ int lexicalAnalyzer(char *fileName, char *code, int size, ReservedWords *rW, TkL
 					insertToken(tkl, newTK);
 
 				}
+			}
+			else{
+				printf("É COMENTAAAAAAAARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
 			}
 
 			clear(word);

@@ -14,10 +14,10 @@ $(PROJ_NAME_O):	$(C_SOURCE)
 	gcc	-c	-Wall	$(C_SOURCE)
 
 objFolder:
-	@ mkdir -p objects
-	@ mv $(OBJ) objects
+	@ mkdir -p ../objects
+	@ mv $(OBJ) ../objects
 
 clean:
-	@ rm objects/*.o
+	@ rm ../objects/*.o
 	@ rm $(EXEC)
-	@ rmdir objects
+	@ rmdir ../objects
